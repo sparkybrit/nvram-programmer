@@ -22,41 +22,49 @@ In-circuit programmer for a Dallas DS1250 5V NVSRAM, controlled from a host PC o
 | D[7:0]  | PORTA         |
 | /OE     | PORTE[6]      |
 | /WE     | PORTE[7]      |
+| /CE     | PORTE[0]      |
 
 ## Build system
 
 Uses **PlatformIO**. The predecessor Arduino IDE project lives at `../arduino-nvram-programmer/`.
 
+The working `pio` binary is at `~/.platformio/penv/bin/pio` — the system `/usr/bin/pio` is broken on this machine.
+
 Build and upload:
 ```
-pio run -t upload
+~/.platformio/penv/bin/pio run -t upload
 ```
 
 Open serial monitor:
 ```
-pio device monitor -b 115200
+~/.platformio/penv/bin/pio device monitor -b 115200
 ```
 
 ## Serial protocol
 
-The host sends a single command byte followed by a raw binary payload:
+The host sends a 4-byte little-endian length prefix followed by the raw binary payload. The Teensy writes each byte sequentially from address 0 and reads it back immediately to verify. A 5-second inter-byte timeout aborts the transfer. Progress is reported as dots (one per 1 KB, newline per 64 KB), followed by a final `PASS` or `FAIL` line.
 
-| Byte | Meaning |
-|------|---------|
-| `W`  | Write (program) — host streams binary data; Teensy writes sequentially from address 0 |
-| `R`  | Read/verify — host streams expected binary data; Teensy reads each byte and compares |
+## Host tool
 
-A 5-second inter-byte timeout ends the transfer. The Teensy reports progress as dots (one per 1 KB, newline per 64 KB) unless `DEBUG` is defined, in which case a full hexdump is printed.
+`nvram_write` is a C program (`nvram_write.c`) that sends a binary file to the Teensy over USB serial.
+
+```
+./nvram_write [--port DEV] <binary>
+```
+
+Default port is `/dev/ttyACM0`; on this machine the Teensy enumerates as `/dev/ttyACM1`. Build with:
+```
+gcc -Wall -o nvram_write nvram_write.c
+```
 
 ## Key source functions
 
-- `bus_request()` — asserts control: sets address/data/control pins to output, drives address to 0
-- `bus_release()` — tri-states all bus pins so the target system can resume
-- `write_byte(addr, data)` — places address and data on bus, pulses /WE low then high
-- `read_byte(addr)` — places address on bus, asserts /OE, reads PORTF
+- `write_byte(addr, data)` — deasserts /OE, drives data bus, sets address, pulses /WE low then high to latch
+- `read_byte(addr)` — floats data bus, sets address, asserts /OE, reads PINA, deasserts /OE
+
+`/CE` is asserted (PORTE[0] low) once at startup and held for the entire session.
 
 ## TODOs in existing code
 
 - `/BUSRQ` assertion/release (bus arbitration with the target CPU) is not yet implemented
-- `/CE` assertion/release is not yet implemented
 - `/RESET` pulse after bus release is not yet implemented
