@@ -4,16 +4,15 @@
 //   A[7:0]  -> PORTD
 //   A[15:8] -> PORTC
 //   A18:16  -> PORTB[2:0]
-//   D[7:0]  -> PORTA
-//   /OE     -> PORTE[6]
-//   /WE     -> PORTE[7]
+//   D[7:0]  -> PORTF
+//   /CE     -> PORTA[0]  (per-byte strobe)
+//   /WE     -> PORTA[2]  (held for entire write burst)
+//   /OE     -> tied low on board
 
-#define OE_NEGATED()  (PORTE |=  (1 << 6))
-#define OE_ASSERTED() (PORTE &= ~(1 << 6))
-#define WE_NEGATED()  (PORTE |=  (1 << 7))
-#define WE_ASSERTED() (PORTE &= ~(1 << 7))
-#define CE_NEGATED()  (PORTE |=  (1 << 0))
-#define CE_ASSERTED() (PORTE &= ~(1 << 0))
+#define WE_NEGATED()  (PORTA |=  (1 << 2))
+#define WE_ASSERTED() (PORTA &= ~(1 << 2))
+#define CE_NEGATED()  (PORTA |=  (1 << 0))
+#define CE_ASSERTED() (PORTA &= ~(1 << 0))
 
 static void set_address(uint32_t addr) {
     PORTD = addr & 0xFF;
@@ -21,25 +20,26 @@ static void set_address(uint32_t addr) {
     PORTB = (PORTB & ~0x07) | ((addr >> 16) & 0x07);
 }
 
+#define NOP6() __asm__ __volatile__("nop\nnop\nnop\nnop\nnop\nnop")
+
+// Caller must: assert /WE, set DDRF=0xFF before the write burst.
 static void write_byte(uint32_t addr, uint8_t data) {
-    OE_NEGATED();                // /OE deasserted before driving data bus
-    PORTA = data;
-    DDRA  = 0xFF;           // data bus -> output
+    PORTF = data;
     set_address(addr);
-    WE_ASSERTED();
-    __asm__ __volatile__("nop\nnop\nnop\nnop"); // >=70 ns tWP
-    WE_NEGATED();                // data latched on rising /WE
+    CE_ASSERTED();
+    NOP6();
+    CE_NEGATED();
+    NOP6();
 }
 
+// Caller must: set DDRF=0x00 before the read burst.
 static uint8_t read_byte(uint32_t addr) {
-    DDRA  = 0x00;           // data bus -> input BEFORE asserting /OE
-    PORTA = 0x00;           // no pull-ups
-    WE_NEGATED();
     set_address(addr);
-    OE_ASSERTED();
-    __asm__ __volatile__("nop\nnop\nnop\nnop\nnop\nnop"); // ~375 ns tACC
-    uint8_t data = PINA;
-    OE_NEGATED();
+    CE_ASSERTED();
+    NOP6();
+    uint8_t data = PINF;
+    CE_NEGATED();
+    NOP6();
     return data;
 }
 
@@ -72,13 +72,12 @@ static bool recv_length(uint32_t *out) {
 void setup() {
     Serial.begin(115200);
 
-    // Set control line states BEFORE enabling outputs to avoid spurious pulses
-    // (port regs reset to 0x00, which would glitch /WE and /OE low).
-    PORTE |= (1 << 6) | (1 << 7); // /OE=1, /WE=1 (deasserted)
-    PORTE &= ~(1 << 0);            // /CE=0 (asserted — held low for entire session)
-    DDRE  |= (1 << 0) | (1 << 6) | (1 << 7); // PE0, PE6, PE7 -> outputs
+    // Deassert /CE and /WE BEFORE enabling outputs to avoid spurious pulses.
+    PORTA |= (1 << 0) | (1 << 2); // /CE=1, /WE=1
+    DDRA  |= (1 << 0) | (1 << 2); // PA0, PA2 -> outputs
 
-    PORTA = 0x00; DDRA = 0x00;    // data bus: input, no pull-ups
+    DIDR0 = 0x00;                  // ensure digital input buffers enabled on PORTF (ADC pins)
+    PORTF = 0x00; DDRF = 0x00;    // data bus: input, no pull-ups
     PORTD = 0x00; DDRD = 0xFF;    // A[7:0] -> output
     PORTC = 0x00; DDRC = 0xFF;    // A[15:8] -> output
     PORTB &= ~0x07; DDRB |= 0x07; // A[18:16] -> output
@@ -87,45 +86,41 @@ void setup() {
 void loop() {
     const uint32_t MAX_SIZE = 512UL * 1024UL;
 
+    while (!Serial.available());
+    uint8_t cmd = (uint8_t)Serial.read();
+
     uint32_t length;
     if (!recv_length(&length) || length == 0 || length > MAX_SIZE) {
         Serial.println("Error: bad length.");
         return;
     }
 
-    Serial.print("Writing "); Serial.print(length); Serial.println(" bytes...");
+    if (cmd == 'W') {
+        WE_ASSERTED();
+        DDRF = 0xFF;
 
-    uint32_t errors = 0;
-    for (uint32_t addr = 0; addr < length; addr++) {
-        uint8_t b;
-        if (!recv_byte(&b)) {
-            Serial.println("\nTimeout.");
-            return;
-        }
-
-        write_byte(addr, b);
-        uint8_t rb = read_byte(addr);
-
-        if (rb != b) {
-            if (errors < 10) {
-                Serial.println();
-                Serial.print("MISMATCH @0x"); Serial.print(addr, HEX);
-                Serial.print(": wrote 0x"); Serial.print(b, HEX);
-                Serial.print(" read 0x"); Serial.println(rb, HEX);
+        for (uint32_t addr = 0; addr < length; addr++) {
+            uint8_t b;
+            if (!recv_byte(&b)) {
+                WE_NEGATED();
+                DDRF = 0x00;
+                Serial.println("Timeout.");
+                return;
             }
-            errors++;
+            write_byte(addr, b);
         }
 
-        if (addr % 1024 == 0) {
-            Serial.print('.');
-            if (addr % (64UL * 1024) == 0 && addr > 0) Serial.println();
-        }
-    }
+        WE_NEGATED();
+        DDRF = 0x00;
+        Serial.println("Written.");
 
-    Serial.println();
-    if (errors > 0) {
-        Serial.print(errors); Serial.println(" errors — FAIL");
+    } else if (cmd == 'R') {
+        PORTF = 0x00; DDRF = 0x00;
+
+        for (uint32_t addr = 0; addr < length; addr++)
+            Serial.write(read_byte(addr));
+
     } else {
-        Serial.print("Wrote "); Serial.print(length); Serial.println(" bytes — PASS");
+        Serial.println("Error: unknown command.");
     }
 }
