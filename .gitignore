@@ -59,3 +59,8 @@ dkms.conf
 
 # debug information files
 *.dwo
+
+# Host tool binaries
+nvram_write
+nvram_read
+dump.bin
