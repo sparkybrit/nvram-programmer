@@ -23,18 +23,21 @@ Programmer for a Dallas DS1250 5V NVSRAM, controlled from a host PC over USB. Th
 | D[7:0]  | PORTF         | bidirectional | physical bit order reversed; tri-state at idle |
 | /AS     | PORTA[0]      | output        | strobed per byte; tri-state when bus not owned |
 | /WE     | PORTA[2]      | output        | held for entire write burst; tri-state at idle |
-| /RESET  | PORTA[4]      | always output | asserted 500 ms after write+verify             |
+| FC0     | PORTA[3]      | output        | function code bit 0; driven 0 while bus owned  |
+| FC1     | PORTA[4]      | output        | function code bit 1; driven 0 while bus owned  |
+| FC2     | PORTA[5]      | output        | function code bit 2; driven 0 while bus owned  |
 | /BR     | PORTE[0]      | always output | assert to request 68030 bus                    |
 | /BGACK  | PORTE[1]      | always output | assert to acknowledge bus grant                |
+| /RESET  | PORTE[6]      | always output | asserted 500 ms after write+verify             |
 | /BG     | PORTE[7]      | always input  | 68030 asserts to grant bus                     |
 | /OE     | tied low      | —             | outputs always enabled                         |
 
 Note: PORTF D[7:0] wiring is physically reversed (PF0→D7 … PF7→D0), so the
 firmware connects to the correct data bits without software bit-reversal.
 
-At startup all bus pins (address, data, /AS, /WE) are tri-state so the 68030
-can boot normally from the NVRAM. /BR, /BGACK, and /RESET are always driven
-outputs (deasserted high at startup); /BG is always an input.
+At startup all bus pins (address, data, /AS, /WE, FC0/FC1/FC2) are tri-state
+so the 68030 can boot normally from the NVRAM. /BR, /BGACK, and /RESET are
+always driven outputs (deasserted high at startup); /BG is always an input.
 
 ### 68030 bus arbitration protocol
 
@@ -43,11 +46,11 @@ outputs (deasserted high at startup); /BG is always an input.
 2. Wait for /BG low — 68030 grants the bus (timeout 1 s)
 3. Assert /BGACK — Teensy acknowledges it has taken the bus
 4. Negate /BR — release the request line
-5. Drive address, data, /AS, /WE pins as outputs
+5. Drive address, data, /AS, /WE, and FC0/FC1/FC2 pins as outputs (FC driven 0)
 
 `relinquish_bus()` sequence:
 1. Deassert /AS and /WE
-2. Tri-state address, data, /AS, /WE pins
+2. Tri-state address, data, /AS, /WE, and FC0/FC1/FC2 pins
 3. Negate /BGACK — signals to 68030 that bus is free
 
 ## Build system
