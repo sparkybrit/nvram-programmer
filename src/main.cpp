@@ -6,7 +6,7 @@
 //   A[18:16]-> PORTB[2:0]
 //   A30     -> PORTB[5]  (always 0)
 //   A31     -> PORTB[6]  (always 0)
-//   D[7:0]  -> PORTF (physically bit-reversed wiring)
+//   D[7:0]  -> PORTF
 //   /AS     -> PORTA[0]  (per-byte strobe)
 //   /WE     -> PORTA[2]  (held for write burst)
 //   FC0     -> PORTA[3]  (function code, driven 0 while bus owned)
@@ -16,7 +16,10 @@
 //   /BGACK  -> PORTE[1]  (output: assert to acknowledge bus grant)
 //   /RESET  -> PORTE[6]  (wired-OR; pin held 0, toggled input→output to assert)
 //   /BG     -> PORTE[7]  (input: 68030 asserts to grant bus)
-//   /OE     -> tied low on board
+//
+// A0..31, D0..7, /AS, /WE, and FC0..2 are all high-impedance when the
+// Teensy is not bus master; they are driven only between acquire_bus()
+// and relinquish_bus().
 
 // PORTA bits
 #define AS_BIT    (1 << 0)
@@ -98,13 +101,7 @@ static bool recv_length(uint32_t *out) {
 //   5. Drive all bus pins; FC0/FC1/FC2 driven to 0
 static bool acquire_bus() {
     PORTE &= ~BR_BIT;                // assert /BR
-    unsigned long t = millis();
-    while (PINE & BG_BIT) {          // wait for /BG low
-        if (millis() - t > 1000) {
-            PORTE |= BR_BIT;         // deassert /BR on timeout
-            return false;
-        }
-    }
+    while (PINE & BG_BIT);          // wait for /BG low
     PORTE &= ~BGACK_BIT;             // assert /BGACK
     PORTE |=  BR_BIT;                // negate /BR
     PORTA  = (PORTA & ~FC_BITS) | AS_BIT | WE_BIT;  // FC=0, /AS=1, /WE=1
@@ -132,8 +129,8 @@ static void relinquish_bus() {
 
 void setup() {
     Serial.begin(115200);
-    // /BR, /BGACK, /RESET are always outputs; /BG is always input.
-    // FC0/FC1/FC2 and all bus pins remain tri-state until acquire_bus().
+    // /BR and /BGACK are always outputs; /BG and /RESET are always inputs
+    // (high-Z) at startup. FC0/FC1/FC2 and all bus pins tri-state until acquire_bus().
     PORTE  = (PORTE | BR_BIT | BGACK_BIT) & ~RESET_BIT; // /RESET port bit stays 0
     DDRE  |= (BR_BIT | BGACK_BIT);                       // /RESET DDR stays input (high-Z)
 }
