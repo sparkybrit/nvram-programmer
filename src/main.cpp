@@ -3,16 +3,25 @@
 // Pin mapping (Teensy++ 2.0 / AT90USB1286):
 //   A[7:0]  -> PORTD
 //   A[15:8] -> PORTC
-//   A18:16  -> PORTB[2:0]
-//   D[7:0]  -> PORTF
+//   A[18:16]-> PORTB[2:0]
+//   D[7:0]  -> PORTF (physically bit-reversed wiring)
 //   /CE     -> PORTA[0]  (per-byte strobe)
-//   /WE     -> PORTA[2]  (held for entire write burst)
+//   /WE     -> PORTA[2]  (held for write burst)
+//   /RESET  -> PORTA[4]  (asserted 500 ms after write+verify to restart 68030)
+//   /BUSRQ  -> PORTA[5]  (assert to request 68030 bus)
+//   /BUSACK -> PORTA[6]  (input: low when 68030 has granted bus)
 //   /OE     -> tied low on board
 
-#define WE_NEGATED()  (PORTA |=  (1 << 2))
-#define WE_ASSERTED() (PORTA &= ~(1 << 2))
-#define CE_NEGATED()  (PORTA |=  (1 << 0))
-#define CE_ASSERTED() (PORTA &= ~(1 << 0))
+#define CE_BIT     (1 << 0)
+#define WE_BIT     (1 << 2)
+#define RESET_BIT  (1 << 4)
+#define BUSRQ_BIT  (1 << 5)
+#define BUSACK_BIT (1 << 6)
+
+#define WE_NEGATED()  (PORTA |=  WE_BIT)
+#define WE_ASSERTED() (PORTA &= ~WE_BIT)
+#define CE_NEGATED()  (PORTA |=  CE_BIT)
+#define CE_ASSERTED() (PORTA &= ~CE_BIT)
 
 static void set_address(uint32_t addr) {
     PORTD = addr & 0xFF;
@@ -22,7 +31,6 @@ static void set_address(uint32_t addr) {
 
 #define NOP6() __asm__ __volatile__("nop\nnop\nnop\nnop\nnop\nnop")
 
-// Caller must: assert /WE, set DDRF=0xFF before the write burst.
 static void write_byte(uint32_t addr, uint8_t data) {
     PORTF = data;
     set_address(addr);
@@ -32,7 +40,6 @@ static void write_byte(uint32_t addr, uint8_t data) {
     NOP6();
 }
 
-// Caller must: set DDRF=0x00 before the read burst.
 static uint8_t read_byte(uint32_t addr) {
     set_address(addr);
     CE_ASSERTED();
@@ -43,7 +50,6 @@ static uint8_t read_byte(uint32_t addr) {
     return data;
 }
 
-// Waits up to 5 s for the next byte; returns false on timeout.
 static bool recv_byte(uint8_t *out) {
     unsigned long t = millis();
     while (!Serial.available()) {
@@ -53,8 +59,6 @@ static bool recv_byte(uint8_t *out) {
     return true;
 }
 
-// Reads a 4-byte little-endian length prefix.  Blocks indefinitely on the
-// first byte; uses the 5 s timeout for the remaining three.
 static bool recv_length(uint32_t *out) {
     while (!Serial.available());
     uint8_t b[4];
@@ -69,18 +73,44 @@ static bool recv_length(uint32_t *out) {
     return true;
 }
 
+// Assert /BUSRQ and wait up to 1 s for /BUSACK low, then drive all bus pins.
+static bool acquire_bus() {
+    PORTA &= ~BUSRQ_BIT;
+    unsigned long t = millis();
+    while (PINA & BUSACK_BIT) {
+        if (millis() - t > 1000) {
+            PORTA |= BUSRQ_BIT;
+            return false;
+        }
+    }
+    PORTA |=  (CE_BIT | WE_BIT);
+    DDRA  |=  (CE_BIT | WE_BIT);
+    DIDR0  =  0x00;
+    PORTF  =  0x00; DDRF  =  0x00;
+    PORTD  =  0x00; DDRD  =  0xFF;
+    PORTC  =  0x00; DDRC  =  0xFF;
+    PORTB &= ~0x07; DDRB |=  0x07;
+    return true;
+}
+
+// Tri-state all bus pins and deassert /BUSRQ.
+static void relinquish_bus() {
+    WE_NEGATED();
+    CE_NEGATED();
+    DDRF   =  0x00; PORTF  =  0x00;
+    DDRD   =  0x00; PORTD  =  0x00;
+    DDRC   =  0x00; PORTC  =  0x00;
+    DDRB  &= ~0x07; PORTB &= ~0x07;
+    DDRA  &= ~(CE_BIT | WE_BIT);
+    PORTA &= ~(CE_BIT | WE_BIT);
+    PORTA |=  BUSRQ_BIT;
+}
+
 void setup() {
     Serial.begin(115200);
-
-    // Deassert /CE and /WE BEFORE enabling outputs to avoid spurious pulses.
-    PORTA |= (1 << 0) | (1 << 2); // /CE=1, /WE=1
-    DDRA  |= (1 << 0) | (1 << 2); // PA0, PA2 -> outputs
-
-    DIDR0 = 0x00;                  // ensure digital input buffers enabled on PORTF (ADC pins)
-    PORTF = 0x00; DDRF = 0x00;    // data bus: input, no pull-ups
-    PORTD = 0x00; DDRD = 0xFF;    // A[7:0] -> output
-    PORTC = 0x00; DDRC = 0xFF;    // A[15:8] -> output
-    PORTB &= ~0x07; DDRB |= 0x07; // A[18:16] -> output
+    // /RESET and /BUSRQ are the only outputs at startup; all bus pins tri-state.
+    PORTA |= (RESET_BIT | BUSRQ_BIT);
+    DDRA  |= (RESET_BIT | BUSRQ_BIT);
 }
 
 void loop() {
@@ -96,6 +126,11 @@ void loop() {
     }
 
     if (cmd == 'W') {
+        if (!acquire_bus()) {
+            Serial.println("Error: bus acquire timeout.");
+            return;
+        }
+
         WE_ASSERTED();
         DDRF = 0xFF;
 
@@ -104,6 +139,7 @@ void loop() {
             if (!recv_byte(&b)) {
                 WE_NEGATED();
                 DDRF = 0x00;
+                relinquish_bus();
                 Serial.println("Timeout.");
                 return;
             }
@@ -112,13 +148,30 @@ void loop() {
 
         WE_NEGATED();
         DDRF = 0x00;
-        Serial.println("Written.");
 
-    } else if (cmd == 'R') {
-        PORTF = 0x00; DDRF = 0x00;
-
+        // Stream read-back to host for verification.
         for (uint32_t addr = 0; addr < length; addr++)
             Serial.write(read_byte(addr));
+
+        relinquish_bus();
+
+        PORTA &= ~RESET_BIT;  // assert /RESET
+        delay(500);
+        PORTA |=  RESET_BIT;  // deassert /RESET
+
+        Serial.println("Done.");
+
+    } else if (cmd == 'R') {
+        if (!acquire_bus()) {
+            Serial.println("Error: bus acquire timeout.");
+            return;
+        }
+
+        PORTF = 0x00; DDRF = 0x00;
+        for (uint32_t addr = 0; addr < length; addr++)
+            Serial.write(read_byte(addr));
+
+        relinquish_bus();
 
     } else {
         Serial.println("Error: unknown command.");

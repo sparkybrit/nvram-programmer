@@ -10,7 +10,7 @@
 
 #define DEFAULT_PORT  "/dev/ttyACM0"
 #define CHUNK_SIZE    4096
-#define TIMEOUT_S     60
+#define TIMEOUT_S     120
 
 static int open_serial(const char *path)
 {
@@ -129,21 +129,18 @@ int main(int argc, char *argv[])
     int fd = open_serial(port);
     if (fd < 0) { free(data); return 1; }
 
-    /* Write */
+    /* Write — firmware writes, then streams read-back bytes, then sends "Done." */
     send_cmd(fd, 'W', (size_t)fsize);
     if (send_bytes(fd, data, (size_t)fsize) < 0) { free(data); close(fd); return 1; }
-    if (!drain_until(fd, "Written.", TIMEOUT_S) && !drain_until(fd, "Timeout.", 1)) {
-        fprintf(stderr, "timed out waiting for write to complete\n");
-        free(data); close(fd); return 1;
-    }
 
-    /* Read back */
     unsigned char *rbuf = malloc((size_t)fsize);
     if (!rbuf) { fprintf(stderr, "out of memory\n"); free(data); close(fd); return 1; }
-    send_cmd(fd, 'R', (size_t)fsize);
     if (recv_bytes(fd, rbuf, (size_t)fsize, TIMEOUT_S) < 0) {
         free(rbuf); free(data); close(fd); return 1;
     }
+
+    /* Wait for firmware to finish (/RESET pulse) */
+    drain_until(fd, "Done.", 2);
 
     /* Compare */
     int rc = 0;
