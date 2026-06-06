@@ -14,7 +14,7 @@
 //   FC2     -> PORTA[5]  (function code, driven 0 while bus owned)
 //   /BR     -> PORTE[0]  (output: assert to request 68030 bus)
 //   /BGACK  -> PORTE[1]  (output: assert to acknowledge bus grant)
-//   /RESET  -> PORTE[6]  (asserted 500 ms after write+verify to restart 68030)
+//   /RESET  -> PORTE[6]  (wired-OR; pin held 0, toggled input→output to assert)
 //   /BG     -> PORTE[7]  (input: 68030 asserts to grant bus)
 //   /OE     -> tied low on board
 
@@ -134,8 +134,8 @@ void setup() {
     Serial.begin(115200);
     // /BR, /BGACK, /RESET are always outputs; /BG is always input.
     // FC0/FC1/FC2 and all bus pins remain tri-state until acquire_bus().
-    PORTE |= (BR_BIT | BGACK_BIT | RESET_BIT);
-    DDRE  |= (BR_BIT | BGACK_BIT | RESET_BIT);
+    PORTE  = (PORTE | BR_BIT | BGACK_BIT) & ~RESET_BIT; // /RESET port bit stays 0
+    DDRE  |= (BR_BIT | BGACK_BIT);                       // /RESET DDR stays input (high-Z)
 }
 
 void loop() {
@@ -180,9 +180,9 @@ void loop() {
 
         relinquish_bus();
 
-        PORTE &= ~RESET_BIT;  // assert /RESET
+        DDRE |=  RESET_BIT;   // assert /RESET (output low, wired-OR)
         delay(500);
-        PORTE |=  RESET_BIT;  // deassert /RESET
+        DDRE &= ~RESET_BIT;   // deassert /RESET (back to input / high-Z)
 
         Serial.println("Done.");
 

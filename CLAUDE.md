@@ -30,7 +30,7 @@ Programmer for a Dallas DS1250 5V NVSRAM, controlled from a host PC over USB. Th
 | FC2     | PORTA[5]      | output        | function code bit 2; driven 0 while bus owned  |
 | /BR     | PORTE[0]      | always output | assert to request 68030 bus                    |
 | /BGACK  | PORTE[1]      | always output | assert to acknowledge bus grant                |
-| /RESET  | PORTE[6]      | always output | asserted 500 ms after write+verify             |
+| /RESET  | PORTE[6]      | wired-OR      | pin held 0; DDR toggled to assert (output low 500 ms) then release (input/high-Z) |
 | /BG     | PORTE[7]      | always input  | 68030 asserts to grant bus                     |
 | /OE     | tied low      | —             | outputs always enabled                         |
 
