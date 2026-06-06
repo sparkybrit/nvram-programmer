@@ -5,7 +5,7 @@
 //   A[15:8] -> PORTC
 //   A[18:16]-> PORTB[2:0]
 //   D[7:0]  -> PORTF (physically bit-reversed wiring)
-//   /CE     -> PORTA[0]  (per-byte strobe)
+//   /AS     -> PORTA[0]  (per-byte strobe)
 //   /WE     -> PORTA[2]  (held for write burst)
 //   /RESET  -> PORTA[4]  (asserted 500 ms after write+verify to restart 68030)
 //   /BR     -> PORTE[0]  (output: assert to request 68030 bus)
@@ -13,7 +13,7 @@
 //   /BG     -> PORTE[7]  (input: 68030 asserts to grant bus)
 //   /OE     -> tied low on board
 
-#define CE_BIT    (1 << 0)
+#define AS_BIT    (1 << 0)
 #define WE_BIT    (1 << 2)
 #define RESET_BIT (1 << 4)
 
@@ -23,8 +23,8 @@
 
 #define WE_NEGATED()  (PORTA |=  WE_BIT)
 #define WE_ASSERTED() (PORTA &= ~WE_BIT)
-#define CE_NEGATED()  (PORTA |=  CE_BIT)
-#define CE_ASSERTED() (PORTA &= ~CE_BIT)
+#define AS_NEGATED()  (PORTA |=  AS_BIT)
+#define AS_ASSERTED() (PORTA &= ~AS_BIT)
 
 static void set_address(uint32_t addr) {
     PORTD = addr & 0xFF;
@@ -37,18 +37,18 @@ static void set_address(uint32_t addr) {
 static void write_byte(uint32_t addr, uint8_t data) {
     PORTF = data;
     set_address(addr);
-    CE_ASSERTED();
+    AS_ASSERTED();
     NOP6();
-    CE_NEGATED();
+    AS_NEGATED();
     NOP6();
 }
 
 static uint8_t read_byte(uint32_t addr) {
     set_address(addr);
-    CE_ASSERTED();
+    AS_ASSERTED();
     NOP6();
     uint8_t data = PINF;
-    CE_NEGATED();
+    AS_NEGATED();
     NOP6();
     return data;
 }
@@ -93,8 +93,8 @@ static bool acquire_bus() {
     }
     PORTE &= ~BGACK_BIT;             // assert /BGACK
     PORTE |=  BR_BIT;                // negate /BR
-    PORTA |=  (CE_BIT | WE_BIT);
-    DDRA  |=  (CE_BIT | WE_BIT);
+    PORTA |=  (AS_BIT | WE_BIT);
+    DDRA  |=  (AS_BIT | WE_BIT);
     DIDR0  =  0x00;
     PORTF  =  0x00; DDRF  =  0x00;
     PORTD  =  0x00; DDRD  =  0xFF;
@@ -106,20 +106,20 @@ static bool acquire_bus() {
 // Tri-state all bus pins then negate /BGACK to return bus to 68030.
 static void relinquish_bus() {
     WE_NEGATED();
-    CE_NEGATED();
+    AS_NEGATED();
     DDRF   =  0x00; PORTF  =  0x00;
     DDRD   =  0x00; PORTD  =  0x00;
     DDRC   =  0x00; PORTC  =  0x00;
     DDRB  &= ~0x07; PORTB &= ~0x07;
-    DDRA  &= ~(CE_BIT | WE_BIT);
-    PORTA &= ~(CE_BIT | WE_BIT);
+    DDRA  &= ~(AS_BIT | WE_BIT);
+    PORTA &= ~(AS_BIT | WE_BIT);
     PORTE |=  BGACK_BIT;             // negate /BGACK — bus returned to 68030
 }
 
 void setup() {
     Serial.begin(115200);
     // /BR, /BGACK, /RESET are always outputs; /BG is always input.
-    // All bus pins (address, data, /CE, /WE) remain tri-state until acquire_bus().
+    // All bus pins (address, data, /AS, /WE) remain tri-state until acquire_bus().
     PORTE |= (BR_BIT | BGACK_BIT);   // /BR=1, /BGACK=1 (both deasserted)
     DDRE  |= (BR_BIT | BGACK_BIT);
     // /BG (E7) stays as input — no DDR change needed
