@@ -4,6 +4,8 @@
 //   A[7:0]  -> PORTD
 //   A[15:8] -> PORTC
 //   A[18:16]-> PORTB[2:0]
+//   A30     -> PORTB[5]  (always 0)
+//   A31     -> PORTB[6]  (always 0)
 //   D[7:0]  -> PORTF (physically bit-reversed wiring)
 //   /AS     -> PORTA[0]  (per-byte strobe)
 //   /WE     -> PORTA[2]  (held for write burst)
@@ -23,6 +25,9 @@
 #define FC1_BIT   (1 << 4)
 #define FC2_BIT   (1 << 5)
 #define FC_BITS   (FC0_BIT | FC1_BIT | FC2_BIT)
+
+// PORTB address bits (A18:16 in [2:0], A30 in [5], A31 in [6])
+#define PORTB_ADDR_MASK 0x67
 
 // PORTE bits
 #define BR_BIT    (1 << 0)
@@ -108,7 +113,7 @@ static bool acquire_bus() {
     PORTF  =  0x00; DDRF  =  0x00;
     PORTD  =  0x00; DDRD  =  0xFF;
     PORTC  =  0x00; DDRC  =  0xFF;
-    PORTB &= ~0x07; DDRB |=  0x07;
+    PORTB &= ~PORTB_ADDR_MASK; DDRB |= PORTB_ADDR_MASK;
     return true;
 }
 
@@ -119,7 +124,7 @@ static void relinquish_bus() {
     DDRF   =  0x00; PORTF  =  0x00;
     DDRD   =  0x00; PORTD  =  0x00;
     DDRC   =  0x00; PORTC  =  0x00;
-    DDRB  &= ~0x07; PORTB &= ~0x07;
+    DDRB  &= ~PORTB_ADDR_MASK; PORTB &= ~PORTB_ADDR_MASK;
     DDRA  &= ~(AS_BIT | WE_BIT | FC_BITS);
     PORTA &= ~(AS_BIT | WE_BIT | FC_BITS);
     PORTE |=  BGACK_BIT;             // negate /BGACK — bus returned to 68030

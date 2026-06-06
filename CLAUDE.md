@@ -20,6 +20,8 @@ Programmer for a Dallas DS1250 5V NVSRAM, controlled from a host PC over USB. Th
 | A16     | PORTB[0]      | output        | tri-state when bus not owned                   |
 | A17     | PORTB[1]      | output        | tri-state when bus not owned                   |
 | A18     | PORTB[2]      | output        | tri-state when bus not owned                   |
+| A30     | PORTB[5]      | output        | always 0; tri-state when bus not owned         |
+| A31     | PORTB[6]      | output        | always 0; tri-state when bus not owned         |
 | D[7:0]  | PORTF         | bidirectional | physical bit order reversed; tri-state at idle |
 | /AS     | PORTA[0]      | output        | strobed per byte; tri-state when bus not owned |
 | /WE     | PORTA[2]      | output        | held for entire write burst; tri-state at idle |
