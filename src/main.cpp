@@ -8,15 +8,18 @@
 //   /CE     -> PORTA[0]  (per-byte strobe)
 //   /WE     -> PORTA[2]  (held for write burst)
 //   /RESET  -> PORTA[4]  (asserted 500 ms after write+verify to restart 68030)
-//   /BUSRQ  -> PORTA[5]  (assert to request 68030 bus)
-//   /BUSACK -> PORTA[6]  (input: low when 68030 has granted bus)
+//   /BR     -> PORTE[0]  (output: assert to request 68030 bus)
+//   /BGACK  -> PORTE[1]  (output: assert to acknowledge bus grant)
+//   /BG     -> PORTE[7]  (input: 68030 asserts to grant bus)
 //   /OE     -> tied low on board
 
-#define CE_BIT     (1 << 0)
-#define WE_BIT     (1 << 2)
-#define RESET_BIT  (1 << 4)
-#define BUSRQ_BIT  (1 << 5)
-#define BUSACK_BIT (1 << 6)
+#define CE_BIT    (1 << 0)
+#define WE_BIT    (1 << 2)
+#define RESET_BIT (1 << 4)
+
+#define BR_BIT    (1 << 0)
+#define BGACK_BIT (1 << 1)
+#define BG_BIT    (1 << 7)
 
 #define WE_NEGATED()  (PORTA |=  WE_BIT)
 #define WE_ASSERTED() (PORTA &= ~WE_BIT)
@@ -73,16 +76,23 @@ static bool recv_length(uint32_t *out) {
     return true;
 }
 
-// Assert /BUSRQ and wait up to 1 s for /BUSACK low, then drive all bus pins.
+// 68030 bus arbitration (acquire):
+//   1. Assert /BR  — request the bus
+//   2. Wait for /BG low  — CPU grants bus
+//   3. Assert /BGACK  — acknowledge grant
+//   4. Negate /BR  — release request line
+//   5. Drive all bus pins
 static bool acquire_bus() {
-    PORTA &= ~BUSRQ_BIT;
+    PORTE &= ~BR_BIT;                // assert /BR
     unsigned long t = millis();
-    while (PINA & BUSACK_BIT) {
+    while (PINE & BG_BIT) {          // wait for /BG low
         if (millis() - t > 1000) {
-            PORTA |= BUSRQ_BIT;
+            PORTE |= BR_BIT;         // deassert /BR on timeout
             return false;
         }
     }
+    PORTE &= ~BGACK_BIT;             // assert /BGACK
+    PORTE |=  BR_BIT;                // negate /BR
     PORTA |=  (CE_BIT | WE_BIT);
     DDRA  |=  (CE_BIT | WE_BIT);
     DIDR0  =  0x00;
@@ -93,7 +103,7 @@ static bool acquire_bus() {
     return true;
 }
 
-// Tri-state all bus pins and deassert /BUSRQ.
+// Tri-state all bus pins then negate /BGACK to return bus to 68030.
 static void relinquish_bus() {
     WE_NEGATED();
     CE_NEGATED();
@@ -103,14 +113,18 @@ static void relinquish_bus() {
     DDRB  &= ~0x07; PORTB &= ~0x07;
     DDRA  &= ~(CE_BIT | WE_BIT);
     PORTA &= ~(CE_BIT | WE_BIT);
-    PORTA |=  BUSRQ_BIT;
+    PORTE |=  BGACK_BIT;             // negate /BGACK — bus returned to 68030
 }
 
 void setup() {
     Serial.begin(115200);
-    // /RESET and /BUSRQ are the only outputs at startup; all bus pins tri-state.
-    PORTA |= (RESET_BIT | BUSRQ_BIT);
-    DDRA  |= (RESET_BIT | BUSRQ_BIT);
+    // /BR, /BGACK, /RESET are always outputs; /BG is always input.
+    // All bus pins (address, data, /CE, /WE) remain tri-state until acquire_bus().
+    PORTE |= (BR_BIT | BGACK_BIT);   // /BR=1, /BGACK=1 (both deasserted)
+    DDRE  |= (BR_BIT | BGACK_BIT);
+    // /BG (E7) stays as input — no DDR change needed
+    PORTA |=  RESET_BIT;             // /RESET=1 (deasserted)
+    DDRA  |=  RESET_BIT;
 }
 
 void loop() {

@@ -13,27 +13,42 @@ Programmer for a Dallas DS1250 5V NVSRAM, controlled from a host PC over USB. Th
 
 ### Pin mapping (Teensy++ 2.0 → DS1250 / 68030 bus)
 
-| Signal   | AVR port/pin  | Notes                                          |
-|----------|---------------|------------------------------------------------|
-| A[7:0]   | PORTD         |                                                |
-| A[15:8]  | PORTC         |                                                |
-| A16      | PORTB[0]      |                                                |
-| A17      | PORTB[1]      |                                                |
-| A18      | PORTB[2]      |                                                |
-| D[7:0]   | PORTF         | physical bit order reversed                    |
-| /CE      | PORTA[0]      | strobed per byte; tri-state when bus not owned |
-| /WE      | PORTA[2]      | held for entire write burst; tri-state at idle |
-| /RESET   | PORTA[4]      | asserted 500 ms after write+verify             |
-| /BUSRQ   | PORTA[5]      | output: assert to request 68030 bus            |
-| /BUSACK  | PORTA[6]      | input: 68030 drives low to grant bus           |
-| /OE      | tied low      | outputs always enabled                         |
+| Signal  | AVR port/pin  | Direction     | Notes                                          |
+|---------|---------------|---------------|------------------------------------------------|
+| A[7:0]  | PORTD         | output        | tri-state when bus not owned                   |
+| A[15:8] | PORTC         | output        | tri-state when bus not owned                   |
+| A16     | PORTB[0]      | output        | tri-state when bus not owned                   |
+| A17     | PORTB[1]      | output        | tri-state when bus not owned                   |
+| A18     | PORTB[2]      | output        | tri-state when bus not owned                   |
+| D[7:0]  | PORTF         | bidirectional | physical bit order reversed; tri-state at idle |
+| /CE     | PORTA[0]      | output        | strobed per byte; tri-state when bus not owned |
+| /WE     | PORTA[2]      | output        | held for entire write burst; tri-state at idle |
+| /RESET  | PORTA[4]      | always output | asserted 500 ms after write+verify             |
+| /BR     | PORTE[0]      | always output | assert to request 68030 bus                    |
+| /BGACK  | PORTE[1]      | always output | assert to acknowledge bus grant                |
+| /BG     | PORTE[7]      | always input  | 68030 asserts to grant bus                     |
+| /OE     | tied low      | —             | outputs always enabled                         |
 
 Note: PORTF D[7:0] wiring is physically reversed (PF0→D7 … PF7→D0), so the
 firmware connects to the correct data bits without software bit-reversal.
 
 At startup all bus pins (address, data, /CE, /WE) are tri-state so the 68030
-can boot normally from the NVRAM. Only /RESET and /BUSRQ are driven at startup
-(both deasserted high).
+can boot normally from the NVRAM. /BR, /BGACK, and /RESET are always driven
+outputs (deasserted high at startup); /BG is always an input.
+
+### 68030 bus arbitration protocol
+
+`acquire_bus()` sequence:
+1. Assert /BR — Teensy requests the bus
+2. Wait for /BG low — 68030 grants the bus (timeout 1 s)
+3. Assert /BGACK — Teensy acknowledges it has taken the bus
+4. Negate /BR — release the request line
+5. Drive address, data, /CE, /WE pins as outputs
+
+`relinquish_bus()` sequence:
+1. Deassert /CE and /WE
+2. Tri-state address, data, /CE, /WE pins
+3. Negate /BGACK — signals to 68030 that bus is free
 
 ## Build system
 
@@ -78,8 +93,8 @@ Default port: `/dev/ttyACM0`, default length: 512 × 1024. Build with `make`.
 
 ## Key source functions
 
-- `acquire_bus()` — asserts /BUSRQ, waits up to 1 s for /BUSACK low, then drives address/data//CE//WE pins as outputs
-- `relinquish_bus()` — tri-states all bus pins, deasserts /BUSRQ
+- `acquire_bus()` — asserts /BR, waits for /BG low, asserts /BGACK, negates /BR, then drives all bus pins as outputs
+- `relinquish_bus()` — tri-states all bus pins, negates /BGACK to return bus to 68030
 - `write_byte(addr, data)` — sets PORTF=data, sets address on PORTD/PORTC/PORTB, strobes /CE low then high (with /WE held asserted) to latch
 - `read_byte(addr)` — sets address, strobes /CE low, reads PINF, deasserts /CE
 
