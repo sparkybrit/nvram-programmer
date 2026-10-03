@@ -1,0 +1,314 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760.0" height="762" viewBox="0 0 760.0 762" font-family="DejaVu Sans, Helvetica, Arial, sans-serif">
+<style>.port{font:bold 11px DejaVu Sans Mono, Menlo, monospace;fill:#fff}.sig{font:bold 12px DejaVu Sans Mono, Menlo, monospace}.title{font:bold 20px DejaVu Sans, Helvetica, sans-serif;fill:#1a202c}.sub{font:12px DejaVu Sans, Helvetica, sans-serif;fill:#4a5568}</style>
+<rect width="760.0" height="762" fill="#ffffff"/>
+<text x="380.0" y="32" text-anchor="middle" class="title">Teensy++ 2.0 pin assignments — nvram-programmer</text>
+<text x="380.0" y="54" text-anchor="middle" class="sub">Top view, USB end down. The Teensy is a DMA master on the 68030 bus, driving the DS1250.</text>
+<rect x="201.0" y="82" width="358.0" height="550" rx="10" fill="#1b4d2b" stroke="#0f2e19" stroke-width="2"/>
+<rect x="338.0" y="328" width="84" height="84" fill="#222" transform="rotate(45 380.0 370)"/>
+<text x="380.0" y="374" text-anchor="middle" font-size="10" fill="#bbb">AT90USB1286</text>
+<rect x="346.0" y="136.6" width="68" height="30" rx="4" fill="#c8cbce" stroke="#6b7075"/>
+<ellipse cx="380.0" cy="151.6" rx="20" ry="10" fill="#e6c79a" stroke="#a88a5a"/>
+<rect x="320.0" y="536.4" width="120" height="109.60000000000002" rx="4" fill="#c0c4c8" stroke="#6b7075"/>
+<text x="380.0" y="583.2" text-anchor="middle" font-size="12" fill="#333">USB</text>
+<line x1="189.0" y1="110" x2="217.0" y2="110" stroke="#2f855a" stroke-width="1.5"/>
+<circle cx="217.0" cy="110" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="217.0" cy="110" r="2.5" fill="#1b4d2b"/>
+<text x="229.0" y="114" class="port">PF7</text>
+<rect x="59.0" y="100.0" width="130" height="20" rx="4" fill="#2f855a"/>
+<text x="124.0" y="114" text-anchor="middle" fill="#fff" class="sig">D7</text>
+<line x1="189.0" y1="136" x2="217.0" y2="136" stroke="#2f855a" stroke-width="1.5"/>
+<circle cx="217.0" cy="136" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="217.0" cy="136" r="2.5" fill="#1b4d2b"/>
+<text x="229.0" y="140" class="port">PF6</text>
+<rect x="59.0" y="126.0" width="130" height="20" rx="4" fill="#2f855a"/>
+<text x="124.0" y="140" text-anchor="middle" fill="#fff" class="sig">D6</text>
+<line x1="189.0" y1="162" x2="217.0" y2="162" stroke="#2f855a" stroke-width="1.5"/>
+<circle cx="217.0" cy="162" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="217.0" cy="162" r="2.5" fill="#1b4d2b"/>
+<text x="229.0" y="166" class="port">PF5</text>
+<rect x="59.0" y="152.0" width="130" height="20" rx="4" fill="#2f855a"/>
+<text x="124.0" y="166" text-anchor="middle" fill="#fff" class="sig">D5</text>
+<line x1="189.0" y1="188" x2="217.0" y2="188" stroke="#2f855a" stroke-width="1.5"/>
+<circle cx="217.0" cy="188" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="217.0" cy="188" r="2.5" fill="#1b4d2b"/>
+<text x="229.0" y="192" class="port">PF4</text>
+<rect x="59.0" y="178.0" width="130" height="20" rx="4" fill="#2f855a"/>
+<text x="124.0" y="192" text-anchor="middle" fill="#fff" class="sig">D4</text>
+<line x1="189.0" y1="214" x2="217.0" y2="214" stroke="#2f855a" stroke-width="1.5"/>
+<circle cx="217.0" cy="214" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="217.0" cy="214" r="2.5" fill="#1b4d2b"/>
+<text x="229.0" y="218" class="port">PF3</text>
+<rect x="59.0" y="204.0" width="130" height="20" rx="4" fill="#2f855a"/>
+<text x="124.0" y="218" text-anchor="middle" fill="#fff" class="sig">D3</text>
+<line x1="189.0" y1="240" x2="217.0" y2="240" stroke="#2f855a" stroke-width="1.5"/>
+<circle cx="217.0" cy="240" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="217.0" cy="240" r="2.5" fill="#1b4d2b"/>
+<text x="229.0" y="244" class="port">PF2</text>
+<rect x="59.0" y="230.0" width="130" height="20" rx="4" fill="#2f855a"/>
+<text x="124.0" y="244" text-anchor="middle" fill="#fff" class="sig">D2</text>
+<line x1="189.0" y1="266" x2="217.0" y2="266" stroke="#2f855a" stroke-width="1.5"/>
+<circle cx="217.0" cy="266" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="217.0" cy="266" r="2.5" fill="#1b4d2b"/>
+<text x="229.0" y="270" class="port">PF1</text>
+<rect x="59.0" y="256.0" width="130" height="20" rx="4" fill="#2f855a"/>
+<text x="124.0" y="270" text-anchor="middle" fill="#fff" class="sig">D1</text>
+<line x1="189.0" y1="292" x2="217.0" y2="292" stroke="#2f855a" stroke-width="1.5"/>
+<circle cx="217.0" cy="292" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="217.0" cy="292" r="2.5" fill="#1b4d2b"/>
+<text x="229.0" y="296" class="port">PF0</text>
+<rect x="59.0" y="282.0" width="130" height="20" rx="4" fill="#2f855a"/>
+<text x="124.0" y="296" text-anchor="middle" fill="#fff" class="sig">D0</text>
+<line x1="189.0" y1="318" x2="217.0" y2="318" stroke="#a0aec0" stroke-width="1.5"/>
+<circle cx="217.0" cy="318" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="217.0" cy="318" r="2.5" fill="#1b4d2b"/>
+<text x="229.0" y="322" class="port">AREF</text>
+<rect x="59.0" y="308.0" width="130" height="20" rx="4" fill="#fff" stroke="#a0aec0" stroke-dasharray="3 2"/>
+<text x="124.0" y="322" text-anchor="middle" fill="#a0aec0" class="sig">—</text>
+<line x1="189.0" y1="344" x2="217.0" y2="344" stroke="#1a202c" stroke-width="1.5"/>
+<circle cx="217.0" cy="344" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="217.0" cy="344" r="2.5" fill="#1b4d2b"/>
+<text x="229.0" y="348" class="port">GND</text>
+<rect x="59.0" y="334.0" width="130" height="20" rx="4" fill="#1a202c"/>
+<text x="124.0" y="348" text-anchor="middle" fill="#fff" class="sig">GND</text>
+<line x1="189.0" y1="370" x2="217.0" y2="370" stroke="#6b46c1" stroke-width="1.5"/>
+<circle cx="217.0" cy="370" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="217.0" cy="370" r="2.5" fill="#1b4d2b"/>
+<text x="229.0" y="374" class="port">PE6</text>
+<rect x="59.0" y="360.0" width="130" height="20" rx="4" fill="#6b46c1"/>
+<text x="124.0" y="374" text-anchor="middle" fill="#fff" class="sig">/RESET  o.d.</text>
+<line x1="189.0" y1="396" x2="217.0" y2="396" stroke="#6b46c1" stroke-width="1.5"/>
+<circle cx="217.0" cy="396" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="217.0" cy="396" r="2.5" fill="#1b4d2b"/>
+<text x="229.0" y="400" class="port">PE7</text>
+<rect x="59.0" y="386.0" width="130" height="20" rx="4" fill="#6b46c1"/>
+<text x="124.0" y="400" text-anchor="middle" fill="#fff" class="sig">/BG  in</text>
+<line x1="189.0" y1="422" x2="217.0" y2="422" stroke="#2b6cb0" stroke-width="1.5"/>
+<circle cx="217.0" cy="422" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="217.0" cy="422" r="2.5" fill="#1b4d2b"/>
+<text x="229.0" y="426" class="port">PB0</text>
+<rect x="59.0" y="412.0" width="130" height="20" rx="4" fill="#2b6cb0"/>
+<text x="124.0" y="426" text-anchor="middle" fill="#fff" class="sig">A16</text>
+<line x1="189.0" y1="448" x2="217.0" y2="448" stroke="#2b6cb0" stroke-width="1.5"/>
+<circle cx="217.0" cy="448" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="217.0" cy="448" r="2.5" fill="#1b4d2b"/>
+<text x="229.0" y="452" class="port">PB1</text>
+<rect x="59.0" y="438.0" width="130" height="20" rx="4" fill="#2b6cb0"/>
+<text x="124.0" y="452" text-anchor="middle" fill="#fff" class="sig">A17</text>
+<line x1="189.0" y1="474" x2="217.0" y2="474" stroke="#2b6cb0" stroke-width="1.5"/>
+<circle cx="217.0" cy="474" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="217.0" cy="474" r="2.5" fill="#1b4d2b"/>
+<text x="229.0" y="478" class="port">PB2</text>
+<rect x="59.0" y="464.0" width="130" height="20" rx="4" fill="#2b6cb0"/>
+<text x="124.0" y="478" text-anchor="middle" fill="#fff" class="sig">A18</text>
+<line x1="189.0" y1="500" x2="217.0" y2="500" stroke="#a0aec0" stroke-width="1.5"/>
+<circle cx="217.0" cy="500" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="217.0" cy="500" r="2.5" fill="#1b4d2b"/>
+<text x="229.0" y="504" class="port">PB3</text>
+<rect x="59.0" y="490.0" width="130" height="20" rx="4" fill="#fff" stroke="#a0aec0" stroke-dasharray="3 2"/>
+<text x="124.0" y="504" text-anchor="middle" fill="#a0aec0" class="sig">—</text>
+<line x1="189.0" y1="526" x2="217.0" y2="526" stroke="#a0aec0" stroke-width="1.5"/>
+<circle cx="217.0" cy="526" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="217.0" cy="526" r="2.5" fill="#1b4d2b"/>
+<text x="229.0" y="530" class="port">PB4</text>
+<rect x="59.0" y="516.0" width="130" height="20" rx="4" fill="#fff" stroke="#a0aec0" stroke-dasharray="3 2"/>
+<text x="124.0" y="530" text-anchor="middle" fill="#a0aec0" class="sig">—</text>
+<line x1="189.0" y1="552" x2="217.0" y2="552" stroke="#2b6cb0" stroke-width="1.5"/>
+<circle cx="217.0" cy="552" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="217.0" cy="552" r="2.5" fill="#1b4d2b"/>
+<text x="229.0" y="556" class="port">PB5</text>
+<rect x="59.0" y="542.0" width="130" height="20" rx="4" fill="#2b6cb0"/>
+<text x="124.0" y="556" text-anchor="middle" fill="#fff" class="sig">A30  (=0)</text>
+<line x1="189.0" y1="578" x2="217.0" y2="578" stroke="#2b6cb0" stroke-width="1.5"/>
+<circle cx="217.0" cy="578" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="217.0" cy="578" r="2.5" fill="#1b4d2b"/>
+<text x="229.0" y="582" class="port">PB6</text>
+<rect x="59.0" y="568.0" width="130" height="20" rx="4" fill="#2b6cb0"/>
+<text x="124.0" y="582" text-anchor="middle" fill="#fff" class="sig">A31  (=0)</text>
+<line x1="189.0" y1="604" x2="217.0" y2="604" stroke="#c53030" stroke-width="1.5"/>
+<circle cx="217.0" cy="604" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="217.0" cy="604" r="2.5" fill="#1b4d2b"/>
+<text x="229.0" y="608" class="port">Vcc</text>
+<rect x="59.0" y="594.0" width="130" height="20" rx="4" fill="#c53030"/>
+<text x="124.0" y="608" text-anchor="middle" fill="#fff" class="sig">+5V from SBC</text>
+<line x1="543.0" y1="110" x2="571.0" y2="110" stroke="#2b6cb0" stroke-width="1.5"/>
+<circle cx="543.0" cy="110" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="543.0" cy="110" r="2.5" fill="#1b4d2b"/>
+<text x="531.0" y="114" text-anchor="end" class="port">PC7</text>
+<rect x="571.0" y="100.0" width="130" height="20" rx="4" fill="#2b6cb0"/>
+<text x="636.0" y="114" text-anchor="middle" fill="#fff" class="sig">A15</text>
+<line x1="543.0" y1="136" x2="571.0" y2="136" stroke="#2b6cb0" stroke-width="1.5"/>
+<circle cx="543.0" cy="136" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="543.0" cy="136" r="2.5" fill="#1b4d2b"/>
+<text x="531.0" y="140" text-anchor="end" class="port">PC6</text>
+<rect x="571.0" y="126.0" width="130" height="20" rx="4" fill="#2b6cb0"/>
+<text x="636.0" y="140" text-anchor="middle" fill="#fff" class="sig">A14</text>
+<line x1="543.0" y1="162" x2="571.0" y2="162" stroke="#2b6cb0" stroke-width="1.5"/>
+<circle cx="543.0" cy="162" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="543.0" cy="162" r="2.5" fill="#1b4d2b"/>
+<text x="531.0" y="166" text-anchor="end" class="port">PC5</text>
+<rect x="571.0" y="152.0" width="130" height="20" rx="4" fill="#2b6cb0"/>
+<text x="636.0" y="166" text-anchor="middle" fill="#fff" class="sig">A13</text>
+<line x1="543.0" y1="188" x2="571.0" y2="188" stroke="#2b6cb0" stroke-width="1.5"/>
+<circle cx="543.0" cy="188" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="543.0" cy="188" r="2.5" fill="#1b4d2b"/>
+<text x="531.0" y="192" text-anchor="end" class="port">PC4</text>
+<rect x="571.0" y="178.0" width="130" height="20" rx="4" fill="#2b6cb0"/>
+<text x="636.0" y="192" text-anchor="middle" fill="#fff" class="sig">A12</text>
+<line x1="543.0" y1="214" x2="571.0" y2="214" stroke="#2b6cb0" stroke-width="1.5"/>
+<circle cx="543.0" cy="214" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="543.0" cy="214" r="2.5" fill="#1b4d2b"/>
+<text x="531.0" y="218" text-anchor="end" class="port">PC3</text>
+<rect x="571.0" y="204.0" width="130" height="20" rx="4" fill="#2b6cb0"/>
+<text x="636.0" y="218" text-anchor="middle" fill="#fff" class="sig">A11</text>
+<line x1="543.0" y1="240" x2="571.0" y2="240" stroke="#2b6cb0" stroke-width="1.5"/>
+<circle cx="543.0" cy="240" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="543.0" cy="240" r="2.5" fill="#1b4d2b"/>
+<text x="531.0" y="244" text-anchor="end" class="port">PC2</text>
+<rect x="571.0" y="230.0" width="130" height="20" rx="4" fill="#2b6cb0"/>
+<text x="636.0" y="244" text-anchor="middle" fill="#fff" class="sig">A10</text>
+<line x1="543.0" y1="266" x2="571.0" y2="266" stroke="#2b6cb0" stroke-width="1.5"/>
+<circle cx="543.0" cy="266" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="543.0" cy="266" r="2.5" fill="#1b4d2b"/>
+<text x="531.0" y="270" text-anchor="end" class="port">PC1</text>
+<rect x="571.0" y="256.0" width="130" height="20" rx="4" fill="#2b6cb0"/>
+<text x="636.0" y="270" text-anchor="middle" fill="#fff" class="sig">A9</text>
+<line x1="543.0" y1="292" x2="571.0" y2="292" stroke="#2b6cb0" stroke-width="1.5"/>
+<circle cx="543.0" cy="292" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="543.0" cy="292" r="2.5" fill="#1b4d2b"/>
+<text x="531.0" y="296" text-anchor="end" class="port">PC0</text>
+<rect x="571.0" y="282.0" width="130" height="20" rx="4" fill="#2b6cb0"/>
+<text x="636.0" y="296" text-anchor="middle" fill="#fff" class="sig">A8</text>
+<line x1="543.0" y1="318" x2="571.0" y2="318" stroke="#6b46c1" stroke-width="1.5"/>
+<circle cx="543.0" cy="318" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="543.0" cy="318" r="2.5" fill="#1b4d2b"/>
+<text x="531.0" y="322" text-anchor="end" class="port">PE1</text>
+<rect x="571.0" y="308.0" width="130" height="20" rx="4" fill="#6b46c1"/>
+<text x="636.0" y="322" text-anchor="middle" fill="#fff" class="sig">/BGACK  out</text>
+<line x1="543.0" y1="344" x2="571.0" y2="344" stroke="#6b46c1" stroke-width="1.5"/>
+<circle cx="543.0" cy="344" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="543.0" cy="344" r="2.5" fill="#1b4d2b"/>
+<text x="531.0" y="348" text-anchor="end" class="port">PE0</text>
+<rect x="571.0" y="334.0" width="130" height="20" rx="4" fill="#6b46c1"/>
+<text x="636.0" y="348" text-anchor="middle" fill="#fff" class="sig">/BR  out</text>
+<line x1="543.0" y1="370" x2="571.0" y2="370" stroke="#2b6cb0" stroke-width="1.5"/>
+<circle cx="543.0" cy="370" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="543.0" cy="370" r="2.5" fill="#1b4d2b"/>
+<text x="531.0" y="374" text-anchor="end" class="port">PD7</text>
+<rect x="571.0" y="360.0" width="130" height="20" rx="4" fill="#2b6cb0"/>
+<text x="636.0" y="374" text-anchor="middle" fill="#fff" class="sig">A7</text>
+<line x1="543.0" y1="396" x2="571.0" y2="396" stroke="#2b6cb0" stroke-width="1.5"/>
+<circle cx="543.0" cy="396" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="543.0" cy="396" r="2.5" fill="#1b4d2b"/>
+<text x="531.0" y="400" text-anchor="end" class="port">PD6</text>
+<rect x="571.0" y="386.0" width="130" height="20" rx="4" fill="#2b6cb0"/>
+<text x="636.0" y="400" text-anchor="middle" fill="#fff" class="sig">A6  (LED!)</text>
+<line x1="543.0" y1="422" x2="571.0" y2="422" stroke="#2b6cb0" stroke-width="1.5"/>
+<circle cx="543.0" cy="422" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="543.0" cy="422" r="2.5" fill="#1b4d2b"/>
+<text x="531.0" y="426" text-anchor="end" class="port">PD5</text>
+<rect x="571.0" y="412.0" width="130" height="20" rx="4" fill="#2b6cb0"/>
+<text x="636.0" y="426" text-anchor="middle" fill="#fff" class="sig">A5</text>
+<line x1="543.0" y1="448" x2="571.0" y2="448" stroke="#2b6cb0" stroke-width="1.5"/>
+<circle cx="543.0" cy="448" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="543.0" cy="448" r="2.5" fill="#1b4d2b"/>
+<text x="531.0" y="452" text-anchor="end" class="port">PD4</text>
+<rect x="571.0" y="438.0" width="130" height="20" rx="4" fill="#2b6cb0"/>
+<text x="636.0" y="452" text-anchor="middle" fill="#fff" class="sig">A4</text>
+<line x1="543.0" y1="474" x2="571.0" y2="474" stroke="#2b6cb0" stroke-width="1.5"/>
+<circle cx="543.0" cy="474" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="543.0" cy="474" r="2.5" fill="#1b4d2b"/>
+<text x="531.0" y="478" text-anchor="end" class="port">PD3</text>
+<rect x="571.0" y="464.0" width="130" height="20" rx="4" fill="#2b6cb0"/>
+<text x="636.0" y="478" text-anchor="middle" fill="#fff" class="sig">A3</text>
+<line x1="543.0" y1="500" x2="571.0" y2="500" stroke="#2b6cb0" stroke-width="1.5"/>
+<circle cx="543.0" cy="500" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="543.0" cy="500" r="2.5" fill="#1b4d2b"/>
+<text x="531.0" y="504" text-anchor="end" class="port">PD2</text>
+<rect x="571.0" y="490.0" width="130" height="20" rx="4" fill="#2b6cb0"/>
+<text x="636.0" y="504" text-anchor="middle" fill="#fff" class="sig">A2</text>
+<line x1="543.0" y1="526" x2="571.0" y2="526" stroke="#2b6cb0" stroke-width="1.5"/>
+<circle cx="543.0" cy="526" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="543.0" cy="526" r="2.5" fill="#1b4d2b"/>
+<text x="531.0" y="530" text-anchor="end" class="port">PD1</text>
+<rect x="571.0" y="516.0" width="130" height="20" rx="4" fill="#2b6cb0"/>
+<text x="636.0" y="530" text-anchor="middle" fill="#fff" class="sig">A1</text>
+<line x1="543.0" y1="552" x2="571.0" y2="552" stroke="#2b6cb0" stroke-width="1.5"/>
+<circle cx="543.0" cy="552" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="543.0" cy="552" r="2.5" fill="#1b4d2b"/>
+<text x="531.0" y="556" text-anchor="end" class="port">PD0</text>
+<rect x="571.0" y="542.0" width="130" height="20" rx="4" fill="#2b6cb0"/>
+<text x="636.0" y="556" text-anchor="middle" fill="#fff" class="sig">A0</text>
+<line x1="543.0" y1="578" x2="571.0" y2="578" stroke="#a0aec0" stroke-width="1.5"/>
+<circle cx="543.0" cy="578" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="543.0" cy="578" r="2.5" fill="#1b4d2b"/>
+<text x="531.0" y="582" text-anchor="end" class="port">PB7</text>
+<rect x="571.0" y="568.0" width="130" height="20" rx="4" fill="#fff" stroke="#a0aec0" stroke-dasharray="3 2"/>
+<text x="636.0" y="582" text-anchor="middle" fill="#a0aec0" class="sig">—</text>
+<line x1="543.0" y1="604" x2="571.0" y2="604" stroke="#1a202c" stroke-width="1.5"/>
+<circle cx="543.0" cy="604" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="543.0" cy="604" r="2.5" fill="#1b4d2b"/>
+<text x="531.0" y="608" text-anchor="end" class="port">GND</text>
+<rect x="571.0" y="594.0" width="130" height="20" rx="4" fill="#1a202c"/>
+<text x="636.0" y="608" text-anchor="middle" fill="#fff" class="sig">GND</text>
+<circle cx="355.0" cy="110" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="355.0" cy="110" r="2.5" fill="#1b4d2b"/>
+<circle cx="381.0" cy="110" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="381.0" cy="110" r="2.5" fill="#1b4d2b"/>
+<circle cx="407.0" cy="110" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="407.0" cy="110" r="2.5" fill="#1b4d2b"/>
+<circle cx="485.0" cy="188" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="485.0" cy="188" r="2.5" fill="#1b4d2b"/>
+<circle cx="355.0" cy="188" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="355.0" cy="188" r="2.5" fill="#1b4d2b"/>
+<rect x="267.0" y="178.0" width="78" height="20" rx="4" fill="#c05621"/>
+<text x="306.0" y="192" text-anchor="middle" fill="#fff" class="sig"><tspan opacity="0.7">PA3</tspan> FC0</text>
+<circle cx="381.0" cy="188" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="381.0" cy="188" r="2.5" fill="#1b4d2b"/>
+<rect x="391.0" y="178.0" width="78" height="20" rx="4" fill="#fff" stroke="#a0aec0" stroke-dasharray="3 2"/>
+<text x="430.0" y="192" text-anchor="middle" fill="#a0aec0" class="sig"><tspan fill="#4a5568">PA7</tspan> —</text>
+<circle cx="355.0" cy="214" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="355.0" cy="214" r="2.5" fill="#1b4d2b"/>
+<rect x="267.0" y="204.0" width="78" height="20" rx="4" fill="#c05621"/>
+<text x="306.0" y="218" text-anchor="middle" fill="#fff" class="sig"><tspan opacity="0.7">PA2</tspan> /WE</text>
+<circle cx="381.0" cy="214" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="381.0" cy="214" r="2.5" fill="#1b4d2b"/>
+<rect x="391.0" y="204.0" width="78" height="20" rx="4" fill="#fff" stroke="#a0aec0" stroke-dasharray="3 2"/>
+<text x="430.0" y="218" text-anchor="middle" fill="#a0aec0" class="sig"><tspan fill="#4a5568">PA6</tspan> —</text>
+<circle cx="355.0" cy="240" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="355.0" cy="240" r="2.5" fill="#1b4d2b"/>
+<rect x="267.0" y="230.0" width="78" height="20" rx="4" fill="#fff" stroke="#a0aec0" stroke-dasharray="3 2"/>
+<text x="306.0" y="244" text-anchor="middle" fill="#a0aec0" class="sig"><tspan fill="#4a5568">PA1</tspan> —</text>
+<circle cx="381.0" cy="240" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="381.0" cy="240" r="2.5" fill="#1b4d2b"/>
+<rect x="391.0" y="230.0" width="78" height="20" rx="4" fill="#c05621"/>
+<text x="430.0" y="244" text-anchor="middle" fill="#fff" class="sig"><tspan opacity="0.7">PA5</tspan> FC2</text>
+<circle cx="355.0" cy="266" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="355.0" cy="266" r="2.5" fill="#1b4d2b"/>
+<rect x="267.0" y="256.0" width="78" height="20" rx="4" fill="#c05621"/>
+<text x="306.0" y="270" text-anchor="middle" fill="#fff" class="sig"><tspan opacity="0.7">PA0</tspan> /AS</text>
+<circle cx="381.0" cy="266" r="6" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="381.0" cy="266" r="2.5" fill="#1b4d2b"/>
+<rect x="391.0" y="256.0" width="78" height="20" rx="4" fill="#c05621"/>
+<text x="430.0" y="270" text-anchor="middle" fill="#fff" class="sig"><tspan opacity="0.7">PA4</tspan> FC1</text>
+<circle cx="372.42" cy="448" r="4.5" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="372.42" cy="448" r="1.9" fill="#1b4d2b"/>
+<circle cx="385.42" cy="448" r="4.5" fill="#d4af37" stroke="#7a5c00"/>
+<circle cx="385.42" cy="448" r="1.9" fill="#1b4d2b"/>
+<rect x="36.10000000000002" y="676" width="14" height="14" rx="3" fill="#2b6cb0"/>
+<text x="56.10000000000002" y="688" font-size="12" fill="#1a202c">Address</text>
+<rect x="124.30000000000001" y="676" width="14" height="14" rx="3" fill="#2f855a"/>
+<text x="144.3" y="688" font-size="12" fill="#1a202c">Data</text>
+<rect x="192.70000000000002" y="676" width="14" height="14" rx="3" fill="#c05621"/>
+<text x="212.70000000000002" y="688" font-size="12" fill="#1a202c">/AS, /WE, FC</text>
+<rect x="313.9" y="676" width="14" height="14" rx="3" fill="#6b46c1"/>
+<text x="333.9" y="688" font-size="12" fill="#1a202c">Bus arbitration / reset</text>
+<rect x="507.69999999999993" y="676" width="14" height="14" rx="3" fill="#c53030"/>
+<text x="527.6999999999999" y="688" font-size="12" fill="#1a202c">Power</text>
+<rect x="582.6999999999999" y="676" width="14" height="14" rx="3" fill="#1a202c"/>
+<text x="602.6999999999999" y="688" font-size="12" fill="#1a202c">Ground</text>
+<rect x="664.3" y="676" width="14" height="14" rx="3" fill="#fff" stroke="#a0aec0" stroke-dasharray="3 2"/>
+<text x="684.3" y="688" font-size="12" fill="#1a202c">Unused</text>
+<text x="380.0" y="712" text-anchor="middle" font-size="11" fill="#4a5568">Address, data, /AS, /WE and FC pins are tri-stated except while the Teensy owns the bus.</text>
+<text x="380.0" y="728" text-anchor="middle" font-size="11" fill="#4a5568">/BR and /BGACK are always driven; /BG is an input; /RESET is wired-OR (open drain). PD6 (A6) also carries the on-board LED.</text>
+<text x="380.0" y="744" text-anchor="middle" font-size="11" fill="#4a5568">Interior pads are drawn at true spacing (except ALE, moved clear of PA7's label); the edge rows are spread out for labels.</text>
+</svg>

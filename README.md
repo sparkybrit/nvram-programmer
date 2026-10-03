@@ -10,6 +10,10 @@ In-circuit programmer for a Dallas DS1250 5V NVSRAM, controlled from a host PC o
 
 ![Teensy++ 2.0](images/teensy.png)
 
+### Pinout
+
+![Teensy++ 2.0 pin assignments](images/teensy-pinout.svg)
+
 ### Pin mapping (Teensy++ 2.0)
 
 | Signal  | AVR port/pin  |
