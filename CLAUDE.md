@@ -42,8 +42,9 @@ Programmer for a Dallas DS1250 5V NVSRAM, controlled from a host PC over USB. Th
 | /OE     | tied low      | —             | outputs always enabled                         |
 
 At startup all bus pins (address, data, /AS, /WE, FC0/FC1/FC2) are tri-state
-so the 68030 can boot normally from the NVRAM. /BR, /BGACK, and /RESET are
-always driven outputs (deasserted high at startup); /BG is always an input.
+so the 68030 can boot normally from the NVRAM. /BR and /BGACK are always driven
+outputs (deasserted high at startup); /BG is always an input; /RESET is high-Z
+except during a reset pulse.
 
 **Exception: A6 carries the Teensy's on-board LED.** The Teensy++ 2.0 has an LED,
 with its series resistor, from PD6 to GND — and PD6 is A6 here. Tri-stating does
@@ -62,7 +63,7 @@ which also covers buffering the programmer off the bus.
 
 `acquire_bus()` sequence:
 1. Assert /BR — Teensy requests the bus
-2. Wait for /BG low — 68030 grants the bus (timeout 1 s)
+2. Wait for /BG low — 68030 grants the bus (no timeout: waits indefinitely)
 3. Assert /BGACK — Teensy acknowledges it has taken the bus
 4. Negate /BR — release the request line
 5. Drive address, data, /AS, /WE, and FC0/FC1/FC2 pins as outputs (FC driven 0)
@@ -93,7 +94,7 @@ The host sends a 1-byte command (`W`, `R` or `X`). `W` and `R` are followed by a
 
 **Read (`R`):** Teensy calls `acquire_bus()`, reads length bytes sequentially from address 0, streams them raw over USB, then calls `relinquish_bus()`.
 
-**Reset (`X`):** no length or payload. Teensy asserts /RESET for 500 ms, then sends `Done.\n`. The bus is not touched, so the 68030 reboots from the NVRAM's current contents.
+**Reset (`X`):** no length or payload. Teensy asserts /RESET for 500 ms, then sends `Done.\n`. The bus is not touched, so the 68030 reboots from the NVRAM's current contents. Confirmed working on the SBC 2026-10-03.
 
 ## Host tools
 
@@ -110,6 +111,7 @@ Default port: `/dev/ttyACM0`. Build with `make`.
 ### nvram_reset
 
 Resets the SBC without reprogramming: sends `X` and waits for `Done.`, then prints `Reset.`
+Takes about 0.6 s (100 ms port settle + the 500 ms /RESET pulse).
 
 ```
 ./nvram_reset [--port DEV]

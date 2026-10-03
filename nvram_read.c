@@ -8,7 +8,7 @@
 #include <time.h>
 #include <sys/select.h>
 
-#define DEFAULT_PORT   "/dev/ttyACM1"
+#define DEFAULT_PORT   "/dev/ttyACM0"
 #define DEFAULT_LENGTH (512UL * 1024UL)
 #define TIMEOUT_S      600
 
