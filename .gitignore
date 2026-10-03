@@ -63,4 +63,5 @@ dkms.conf
 # Host tool binaries
 nvram_write
 nvram_read
+nvram_reset
 dump.bin

@@ -127,6 +127,13 @@ static void relinquish_bus() {
     PORTE |=  BGACK_BIT;             // negate /BGACK — bus returned to 68030
 }
 
+// Pulse /RESET low for 500 ms (wired-OR: drive low, then release to high-Z).
+static void pulse_reset() {
+    DDRE |=  RESET_BIT;   // assert /RESET (output low, wired-OR)
+    delay(500);
+    DDRE &= ~RESET_BIT;   // deassert /RESET (back to input / high-Z)
+}
+
 void setup() {
     Serial.begin(115200);
     // /BR and /BGACK are always outputs; /BG and /RESET are always inputs
@@ -140,6 +147,13 @@ void loop() {
 
     while (!Serial.available());
     uint8_t cmd = (uint8_t)Serial.read();
+
+    // Reset takes no length or payload.
+    if (cmd == 'X') {
+        pulse_reset();
+        Serial.println("Done.");
+        return;
+    }
 
     uint32_t length;
     if (!recv_length(&length) || length == 0 || length > MAX_SIZE) {
@@ -176,10 +190,7 @@ void loop() {
             Serial.write(read_byte(addr));
 
         relinquish_bus();
-
-        DDRE |=  RESET_BIT;   // assert /RESET (output low, wired-OR)
-        delay(500);
-        DDRE &= ~RESET_BIT;   // deassert /RESET (back to input / high-Z)
+        pulse_reset();
 
         Serial.println("Done.");
 
