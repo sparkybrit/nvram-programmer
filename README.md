@@ -24,7 +24,7 @@ resets the CPU — so the chip never leaves the board.
 | A[7:0]   | PD[7:0]    | output        | tri-state unless the programmer owns the bus        |
 | A[15:8]  | PC[7:0]    | output        | tri-state unless the programmer owns the bus        |
 | A[18:16] | PB[2:0]    | output        | tri-state unless the programmer owns the bus        |
-| A30, A31 | PB5, PB6   | output        | driven 0 while the bus is owned                     |
+| A24, A25 | PB5, PB6   | output        | driven 0 while the bus is owned                     |
 | D[7:0]   | PF[7:0]    | bidirectional | tri-state at idle                                   |
 | /AS      | PA0        | output        | strobed once per byte                               |
 | /WE      | PA2        | output        | held low for a whole write burst                    |

@@ -4,8 +4,8 @@
 //   A[7:0]  -> PORTD
 //   A[15:8] -> PORTC
 //   A[18:16]-> PORTB[2:0]
-//   A30     -> PORTB[5]  (always 0)
-//   A31     -> PORTB[6]  (always 0)
+//   A24     -> PORTB[5]  (always 0)
+//   A25     -> PORTB[6]  (always 0)
 //   D[7:0]  -> PORTF
 //   /AS     -> PORTA[0]  (per-byte strobe)
 //   /WE     -> PORTA[2]  (held for write burst)
@@ -29,7 +29,9 @@
 #define FC2_BIT   (1 << 5)
 #define FC_BITS   (FC0_BIT | FC1_BIT | FC2_BIT)
 
-// PORTB address bits (A18:16 in [2:0], A30 in [5], A31 in [6])
+// PORTB address bits (A18:16 in [2:0], A24 in [5], A25 in [6]).
+// A24/A25 = 0 is the NVRAM quadrant in sparky1's decode. These two pins were
+// wired to A30/A31 until 2026-10-10, when the decode moved down to A25/A24.
 #define PORTB_ADDR_MASK 0x67
 
 // PORTE bits
