@@ -4,7 +4,7 @@
 //   A[7:0]  -> PORTD
 //   A[15:8] -> PORTC
 //   A[18:16]-> PORTB[2:0]
-//   A24     -> PORTB[5]  (always 0)
+//   A24     -> PORTB[5]  (always 1 - the NVRAM quadrant)
 //   A25     -> PORTB[6]  (always 0)
 //   D[7:0]  -> PORTF
 //   /AS     -> PORTA[0]  (per-byte strobe)
@@ -30,9 +30,20 @@
 #define FC_BITS   (FC0_BIT | FC1_BIT | FC2_BIT)
 
 // PORTB address bits (A18:16 in [2:0], A24 in [5], A25 in [6]).
-// A24/A25 = 0 is the NVRAM quadrant in sparky1's decode. These two pins were
-// wired to A30/A31 until 2026-10-10, when the decode moved down to A25/A24.
+// These two pins were wired to A30/A31 until 2026-10-10, when the decode
+// moved down to A25/A24.
 #define PORTB_ADDR_MASK 0x67
+
+// A25 = 0, A24 = 1 is the NVRAM quadrant in sparky1's decode, from busdecoder
+// revision 03 on: the SRAM moved to the bottom quadrant (A25 = A24 = 0) for
+// Linux. busdecoder's /BOOT override sends the bottom quadrant to the NVRAM
+// only for the first 8 bus cycles after /RESET, long over by the time this
+// takes the bus, so A24 must be driven high.
+//
+// This firmware and busdecoder revision 03 go in TOGETHER. Mismatched either
+// way, every write lands in the SRAM, reads back correctly from it, and
+// nvram_write prints "Verified." with the NVRAM untouched.
+#define PORTB_NVRAM_QUADRANT (1 << 5)
 
 // PORTE bits
 #define BR_BIT    (1 << 0)
@@ -112,7 +123,8 @@ static bool acquire_bus() {
     PORTF  =  0x00; DDRF  =  0x00;
     PORTD  =  0x00; DDRD  =  0xFF;
     PORTC  =  0x00; DDRC  =  0xFF;
-    PORTB &= ~PORTB_ADDR_MASK; DDRB |= PORTB_ADDR_MASK;
+    PORTB  = (PORTB & ~PORTB_ADDR_MASK) | PORTB_NVRAM_QUADRANT;
+    DDRB  |= PORTB_ADDR_MASK;
     return true;
 }
 
