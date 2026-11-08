@@ -4,7 +4,7 @@ Programmer for a Dallas DS1250 5V NVSRAM, controlled from a host PC over USB. Th
 
 ## Hardware
 
-- **Target chip:** Dallas DS1250Y-70 5V NVSRAM (512K × 8-bit, 19-bit address bus).
+- **Target chip:** Dallas DS1250AB-70 5V NVSRAM (marked on the part; the Y was assumed until 2026-11-08) (512K × 8-bit, 19-bit address bus).
   Datasheet (Markdown): `../datasheets/Dallas DS121250AB/Dallas DS121250AB.md` in the private
   [datasheets](https://github.com/sparkybrit/datasheets) repo, cloned at `~/Projects/datasheets`.
   The datasheet is not kept in this repo.
