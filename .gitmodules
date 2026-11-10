@@ -1,0 +1,3 @@
+[submodule "kicad-tools"]
+	path = lib/kicad-tools
+	url = https://github.com/sparkybrit/kicad-tools.git

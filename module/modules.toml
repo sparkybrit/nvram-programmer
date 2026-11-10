@@ -1,0 +1,19 @@
+# The programmer as a module of a larger schematic (Sparky1's): one KiCad symbol whose pins are its
+# connector pins, read from module/teensy.pins, transcribed from the pin table.
+# Edit this file or the source, then `make -C module`; `make -C module check` fails if the
+# symbol and the source disagree. module/interfaces/ and the .kicad_sym are generated.
+# The keys are described in lib/kicad-tools/README.md.
+
+library = "nvram-programmer"
+keywords = "sparky1 module interface"
+
+[NVRAM_PROGRAMMER]
+description = "In-circuit NVRAM programmer, Teensy++ 2.0: takes the bus with /BR, /BG, /BGACK and writes the DS1250. Pins numbered by Teensy port name"
+repo = "https://github.com/sparkybrit/nvram-programmer"
+path = ".."
+pins = "module/teensy.pins"
+connectors = ["TEENSY"]
+names = { TEENSY = "nvram-programmer, Teensy++ 2.0" }
+# Top view, USB end down (nvram-programmer images/teensy-pinout.svg); the PA block of interior
+# pads below the edge rows, as its two columns.
+sides = { left = ["TEENSY:PF7,PF6,PF5,PF4,PF3,PF2,PF1,PF0,AREF,GND1,PE6,PE7,PB0,PB1,PB2,PB3,PB4,PB5,PB6,VCC", "interior pads|TEENSY:PA3,PA2,PA1,PA0"], right = ["TEENSY:PC7,PC6,PC5,PC4,PC3,PC2,PC1,PC0,PE1,PE0,PD7,PD6,PD5,PD4,PD3,PD2,PD1,PD0,PB7,GND2", "TEENSY:PA7,PA6,PA5,PA4"] }
